@@ -42,8 +42,7 @@ def main():
     out = s.read(12)
     f = Command()
     f.unpack(out)
-    k = out
-    j = 1
+    print(f)
 
 
 if __name__ == '__main__':
