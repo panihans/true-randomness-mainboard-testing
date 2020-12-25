@@ -13,7 +13,7 @@ class Command:
     thrower: int = 0
     led: int = 0
     delimiter: int = 0xBAD
-    format = 'hhhhhh'
+    format = 'hhhhh'
 
     def pack(self):
         return struct.pack(
@@ -22,7 +22,6 @@ class Command:
             self.motor2,
             self.motor3,
             self.thrower,
-            self.led,
             self.delimiter)
 
     def unpack(self, packed):
@@ -31,15 +30,16 @@ class Command:
         self.motor2 = unpacked[1]
         self.motor3 = unpacked[2]
         self.thrower = unpacked[3]
-        self.led = unpacked[4]
 
 
 def main():
     c = Command()
-    c.motor1 = 50
-    s = serial.Serial('COM4')
+    c.motor1 = 250
+    c.motor2 = 250
+    c.motor3 = 250
+    s = serial.Serial('COM3')
     s.write(c.pack())
-    out = s.read(12)
+    out = s.read(10)
     f = Command()
     f.unpack(out)
     print(f)
