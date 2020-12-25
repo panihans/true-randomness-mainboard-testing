@@ -2,7 +2,6 @@ import time
 from dataclasses import dataclass
 import numpy as np
 from matplotlib import pyplot as plt
-from matplotlib.widgets import Slider
 
 apb_freq = 2441
 
@@ -30,7 +29,7 @@ class Motor:
         self.set_counts(revs)
 
 
-def run_sim(step_count=100, k_u=1.595, t_u=1.6325):
+def run_sim(step_count=100):
     duty_cycle = lambda x: int(x / 500 * 65535)
     m = Motor(duty_cycle=duty_cycle(250), rpm_skew=0.5, target_rpm=250)
 
@@ -46,25 +45,25 @@ def run_sim(step_count=100, k_u=1.595, t_u=1.6325):
         e = m.target_rpm - m.rpm
         errors.append(e)
 
-        # k_u = 1.595
+        k_u = 1.595
 
         # proportional
-        k_p = 0.6 * k_u
+        k_p = 0.7 * k_u
         p_out = k_p * e
 
-        # t_u = 1.6325
+        t_u = 1.6325
 
         # integral
-        k_i = 1.2 * k_u / t_u
+        k_i = 0.4 * t_u
         e_sum = np.trapz(errors, times)
         i_out = k_i * e_sum
 
         # derivative
-        k_d = (3 * k_u * t_u) / 40
+        t_d = 0.125 * t_u
         d_e = e - (errors[-2] if len(errors) > 1 else 0)
         d_t = t - (times[-2] if len(times) > 1 else 0)
         slope = d_e / d_t
-        d_out = k_d * slope
+        d_out = t_d * slope
 
         pid = p_out + i_out + d_out
         m.duty_cycle = duty_cycle(m.ideal_rpm + pid)
@@ -77,10 +76,9 @@ def run_sim(step_count=100, k_u=1.595, t_u=1.6325):
 
 def main():
     maxes = []
-    for i in range(100):
-        rpm, errors, times = run_sim(100, t_u=(0.1 + 0.1 * i))
-        maxes.append(np.max(errors))
-    plt.plot(times, rpm, label='rpm')
+    rpm, errors, times = run_sim(100)
+    maxes.append(np.max(errors))
+    plt.plot(times, rpm, label=f'rpm')
     plt.show()
 
 
