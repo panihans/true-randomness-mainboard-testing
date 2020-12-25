@@ -1,13 +1,19 @@
 import struct
-import ctypes
 import sys
 from dataclasses import dataclass
+
+import numpy as np
 from PyQt5 import QtWidgets, uic, QtCore
 
 import serial
 from PyQt5.QtWidgets import QMainWindow
 
 from mplqt5 import MyDynamicMplCanvas
+
+motor1Points = []
+motor2Points = []
+motor3Points = []
+throwerPoints = []
 
 
 @dataclass
@@ -16,9 +22,9 @@ class Command:
     motor2: int = 0
     motor3: int = 0
     thrower: int = 0
-    led: int = 0
-    delimiter: int = 0xBAD
-    format = 'hhhhh'
+    delimiter: int = 0xABCABC
+    format = 'iiiii'
+    size = struct.calcsize(format)
 
     def pack(self):
         return struct.pack(
@@ -49,31 +55,51 @@ class QTWindow(QMainWindow):
 
         self.writeReadTimer = QtCore.QTimer(self)
         self.writeReadTimer.timeout.connect(self.write_read_mainboard)
+        self.mplTimer = QtCore.QTimer(self)
+        self.mplTimer.timeout.connect(self.mpl_timer_elapsed)
+        self.sendingCommands = False
 
         self.startStopButton.clicked.connect(self.startStopButton_clicked)
 
     def startStopButton_clicked(self):
-        if self.writeReadTimer.isActive():
+        if self.sendingCommands:
+            self.sendingCommands = False
             self.writeReadTimer.stop()
+            self.mplTimer.stop()
             self.startStopButton.setText('start')
-            self.writeReadTimerPeriod.setEnabled(True)
+            self.sendSpinBox.setEnabled(True)
         else:
-            self.writeReadTimer.start(int(self.writeReadTimerPeriod.value()))
+            self.sendingCommands = True
+            self.writeReadTimer.start(int(self.sendSpinBox.value()))
+            self.mplTimer.start(1000)
             self.startStopButton.setText('stop')
-            self.writeReadTimerPeriod.setEnabled(False)
+            self.sendSpinBox.setEnabled(False)
 
     def write_read_mainboard(self):
-        # c = Command()
-        # c.motor1 = 250
-        # c.motor2 = 250
-        # c.motor3 = 250
-        # s = serial.Serial('COM3')
-        # s.write(c.pack())
-        # out = s.read(10)
-        # f = Command()
-        # f.unpack(out)
-        # print(f)
-        self.mplCanvas.update_figure([0, 1, 2, 3], [9, 5, 7, 10])
+        c = Command()
+        c.motor1 = int(self.motor1SpinBox.value())
+        c.motor2 = int(self.motor2SpinBox.value())
+        c.motor3 = int(self.motor3SpinBox.value())
+        c.thrower = int(self.throwerSpinBox.value())
+        s = serial.Serial('COM3')
+        s.write(c.pack())
+        out = s.read(c.size)
+        f = Command()
+        f.unpack(out)
+        motor1Points.append(f.motor1)
+        motor2Points.append(f.motor2)
+        motor3Points.append(f.motor3)
+        throwerPoints.append(f.thrower)
+        print(f.motor1)
+
+    def mpl_timer_elapsed(self):
+        rr = lambda x: np.arange(0, len(motor1Points), 1)
+        self.mplCanvas.update_figure(rr(motor1Points), motor1Points)
+        while len(motor1Points) > 100:
+            motor1Points.pop(0)
+        #self.mplCanvas.update_figure(rr(motor2Points), motor2Points)
+        #self.mplCanvas.update_figure(rr(motor3Points), motor3Points)
+        #self.mplCanvas.update_figure(rr(throwerPoints), throwerPoints)
 
 
 def main():
