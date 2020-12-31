@@ -22,8 +22,10 @@ class Command:
     motor2: int = 0
     motor3: int = 0
     thrower: int = 0
+    servo: int = 0
+    ir: int = 0
     delimiter: int = 0xABCABC
-    format = 'iiiii'
+    format = 'iiiiiii'
     size = struct.calcsize(format)
 
     def pack(self):
@@ -33,6 +35,8 @@ class Command:
             self.motor2,
             self.motor3,
             self.thrower,
+            self.servo,
+            self.ir,
             self.delimiter)
 
     def unpack(self, packed):
@@ -41,6 +45,8 @@ class Command:
         self.motor2 = unpacked[1]
         self.motor3 = unpacked[2]
         self.thrower = unpacked[3]
+        self.servo = unpacked[4]
+        self.ir = unpacked[5]
 
 
 class QTWindow(QMainWindow):
@@ -81,6 +87,8 @@ class QTWindow(QMainWindow):
         c.motor2 = int(self.motor2SpinBox.value())
         c.motor3 = int(self.motor3SpinBox.value())
         c.thrower = int(self.throwerSpinBox.value())
+        c.servo = int(self.servoSpinBox.value())
+        c.ir = int(self.irSpinBox.value())
         s = serial.Serial('COM3')
         s.write(c.pack())
         out = s.read(c.size)
@@ -90,7 +98,13 @@ class QTWindow(QMainWindow):
         motor2Points.append(f.motor2)
         motor3Points.append(f.motor3)
         throwerPoints.append(f.thrower)
-        print(f.motor1)
+        self.motor1Actual.setText(str(f.motor1))
+        self.motor2Actual.setText(str(f.motor2))
+        self.motor3Actual.setText(str(f.motor3))
+        self.throwerActual.setText(str(f.thrower))
+        self.servoActual.setText(str(f.servo))
+        self.irActual.setText(str(f.ir))
+        print(f'ir:{f.ir}')
 
     def mpl_timer_elapsed(self):
         rr = lambda x: np.arange(0, len(motor1Points), 1)
