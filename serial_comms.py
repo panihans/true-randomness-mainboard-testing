@@ -18,14 +18,18 @@ throwerPoints = []
 
 @dataclass
 class Command:
-    motor1: int = 0
-    motor2: int = 0
-    motor3: int = 0
+    motor1: float = 0
+    motor2: float = 0
+    motor3: float = 0
     thrower: int = 0
     servo: int = 0
     ir: int = 0
+    # pGain: float = 0
+    # iGain: float = 0
+    # dGain: float = 0
     delimiter: int = 0xABCABC
-    format = 'iiiiiii'
+    #format = 'fffiiifffi'
+    format = 'fffiiii'
     size = struct.calcsize(format)
 
     def pack(self):
@@ -37,6 +41,9 @@ class Command:
             self.thrower,
             self.servo,
             self.ir,
+            # self.pGain,
+            # self.iGain,
+            # self.dGain,
             self.delimiter)
 
     def unpack(self, packed):
@@ -89,6 +96,9 @@ class QTWindow(QMainWindow):
         c.thrower = int(self.throwerSpinBox.value())
         c.servo = int(self.servoSpinBox.value())
         c.ir = int(self.irSpinBox.value())
+        # c.pGain = float(self.pSpinBox.value())
+        # c.iGain = float(self.iSpinBox.value())
+        # c.dGain = float(self.dSpinBox.value())
         s = serial.Serial('COM3')
         s.write(c.pack())
         out = s.read(c.size)
@@ -104,16 +114,21 @@ class QTWindow(QMainWindow):
         self.throwerActual.setText(str(f.thrower))
         self.servoActual.setText(str(f.servo))
         self.irActual.setText(str(f.ir))
-        print(f'ir:{f.ir}')
+        print(f'm1:{f.motor1}, m2:{f.motor2}, m3:{f.motor3}')
 
     def mpl_timer_elapsed(self):
         rr = lambda x: np.arange(0, len(motor1Points), 1)
         self.mplCanvas.update_figure(rr(motor1Points), motor1Points)
-        while len(motor1Points) > 100:
-            motor1Points.pop(0)
         #self.mplCanvas.update_figure(rr(motor2Points), motor2Points)
         #self.mplCanvas.update_figure(rr(motor3Points), motor3Points)
-        #self.mplCanvas.update_figure(rr(throwerPoints), throwerPoints)
+        while len(motor1Points) > 100:
+            motor1Points.pop(0)
+        while len(motor2Points) > 100:
+            motor2Points.pop(0)
+        while len(motor3Points) > 100:
+            motor3Points.pop(0)
+        while len(throwerPoints) > 100:
+            throwerPoints.pop(0)
 
 
 def main():
