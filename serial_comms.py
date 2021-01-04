@@ -27,9 +27,10 @@ class Command:
     # pGain: float = 0
     # iGain: float = 0
     # dGain: float = 0
+    pid_type: int = 0  # 0 = instant pid; 1 = avg of last 10 values
     delimiter: int = 0xABCABC
-    #format = 'fffiiifffi'
-    format = 'fffiiii'
+    # format = 'fffiiifffi'
+    format = 'fffiiiii'
     size = struct.calcsize(format)
 
     def pack(self):
@@ -41,6 +42,7 @@ class Command:
             self.thrower,
             self.servo,
             self.ir,
+            self.pid_type,
             # self.pGain,
             # self.iGain,
             # self.dGain,
@@ -90,9 +92,9 @@ class QTWindow(QMainWindow):
 
     def write_read_mainboard(self):
         c = Command()
-        c.motor1 = int(self.motor1SpinBox.value())
-        c.motor2 = int(self.motor2SpinBox.value())
-        c.motor3 = int(self.motor3SpinBox.value())
+        c.motor1 = float(self.motor1SpinBox.value())
+        c.motor2 = float(self.motor2SpinBox.value())
+        c.motor3 = float(self.motor3SpinBox.value())
         c.thrower = int(self.throwerSpinBox.value())
         c.servo = int(self.servoSpinBox.value())
         c.ir = int(self.irSpinBox.value())
@@ -119,8 +121,8 @@ class QTWindow(QMainWindow):
     def mpl_timer_elapsed(self):
         rr = lambda x: np.arange(0, len(motor1Points), 1)
         self.mplCanvas.update_figure(rr(motor1Points), motor1Points)
-        #self.mplCanvas.update_figure(rr(motor2Points), motor2Points)
-        #self.mplCanvas.update_figure(rr(motor3Points), motor3Points)
+        # self.mplCanvas.update_figure(rr(motor2Points), motor2Points)
+        # self.mplCanvas.update_figure(rr(motor3Points), motor3Points)
         while len(motor1Points) > 100:
             motor1Points.pop(0)
         while len(motor2Points) > 100:

@@ -65,7 +65,7 @@
            </widget>
           </item>
           <item>
-           <widget class="QSpinBox" name="motor1SpinBox">
+           <widget class="QDoubleSpinBox" name="motor1SpinBox">
             <property name="minimumSize">
              <size>
               <width>110</width>
@@ -75,14 +75,14 @@
             <property name="showGroupSeparator" stdset="0">
              <bool>false</bool>
             </property>
-            <property name="suffix">
-             <string/>
-            </property>
             <property name="minimum">
-             <number>-65535</number>
+             <double>-100.000000000000000</double>
             </property>
             <property name="maximum">
-             <number>65535</number>
+             <double>100.000000000000000</double>
+            </property>
+            <property name="singleStep">
+             <double>0.100000000000000</double>
             </property>
            </widget>
           </item>
@@ -145,7 +145,7 @@
            </widget>
           </item>
           <item>
-           <widget class="QSpinBox" name="motor2SpinBox">
+           <widget class="QDoubleSpinBox" name="motor2SpinBox">
             <property name="minimumSize">
              <size>
               <width>110</width>
@@ -155,14 +155,14 @@
             <property name="showGroupSeparator" stdset="0">
              <bool>false</bool>
             </property>
-            <property name="suffix">
-             <string/>
-            </property>
             <property name="minimum">
-             <number>-65535</number>
+             <double>-100.000000000000000</double>
             </property>
             <property name="maximum">
-             <number>65535</number>
+             <double>100.000000000000000</double>
+            </property>
+            <property name="singleStep">
+             <double>0.100000000000000</double>
             </property>
            </widget>
           </item>
@@ -225,7 +225,7 @@
            </widget>
           </item>
           <item>
-           <widget class="QSpinBox" name="motor3SpinBox">
+           <widget class="QDoubleSpinBox" name="motor3SpinBox">
             <property name="minimumSize">
              <size>
               <width>110</width>
@@ -235,14 +235,14 @@
             <property name="showGroupSeparator" stdset="0">
              <bool>false</bool>
             </property>
-            <property name="suffix">
-             <string/>
-            </property>
             <property name="minimum">
-             <number>-65535</number>
+             <double>-100.000000000000000</double>
             </property>
             <property name="maximum">
-             <number>65535</number>
+             <double>100.000000000000000</double>
+            </property>
+            <property name="singleStep">
+             <double>0.100000000000000</double>
             </property>
            </widget>
           </item>
