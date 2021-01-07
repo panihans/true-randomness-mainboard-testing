@@ -29,7 +29,7 @@ class Command:
     # dGain: float = 0
     pid_type: int = 0  # 0 = instant pid; 1 = avg of last 10 values
     delimiter: int = 0xABCABC
-    # format = 'fffiiifffi'
+    #format = 'fffiiifffii'
     format = 'fffiiiii'
     size = struct.calcsize(format)
 
@@ -42,10 +42,10 @@ class Command:
             self.thrower,
             self.servo,
             self.ir,
-            self.pid_type,
             # self.pGain,
             # self.iGain,
             # self.dGain,
+            self.pid_type,
             self.delimiter)
 
     def unpack(self, packed):
