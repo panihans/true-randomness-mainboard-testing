@@ -121,8 +121,6 @@ class QTWindow(QMainWindow):
     def mpl_timer_elapsed(self):
         rr = lambda x: np.arange(0, len(motor1Points), 1)
         self.mplCanvas.update_figure(rr(motor1Points), motor1Points)
-        # self.mplCanvas.update_figure(rr(motor2Points), motor2Points)
-        # self.mplCanvas.update_figure(rr(motor3Points), motor3Points)
         while len(motor1Points) > 100:
             motor1Points.pop(0)
         while len(motor2Points) > 100:

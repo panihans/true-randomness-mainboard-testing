@@ -1,0 +1,45 @@
+[DEFAULT]
+lh = 0
+ls = 0
+lv = 0
+hh = 179
+hs = 255
+hv = 255
+img = 0
+
+[VALUES]
+lh = 0
+ls = 73
+lv = 16
+hh = 179
+hs = 255
+hv = 189
+img = 5
+
+[court]
+lh = 30
+ls = 55
+lv = 200
+hh = 118
+hs = 155
+hv = 255
+img = 0
+
+[black]
+lh = 0
+ls = 0
+lv = 0
+hh = 179
+hs = 255
+hv = 169
+img = 1
+
+[blue]
+lh = 126
+ls = 66
+lv = 73
+hh = 159
+hs = 112
+hv = 157
+img = 1
+
