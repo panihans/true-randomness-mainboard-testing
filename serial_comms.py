@@ -21,8 +21,8 @@ class Command:
     motor1: float = 0
     motor2: float = 0
     motor3: float = 0
-    thrower: int = 0
-    servo: int = 0
+    thrower: float = 0
+    servo: float = 0
     ir: int = 0
     # pGain: float = 0
     # iGain: float = 0
@@ -30,7 +30,7 @@ class Command:
     pid_type: int = 0  # 0 = instant pid; 1 = avg of last 10 values
     delimiter: int = 0xABCABC
     #format = 'fffiiifffii'
-    format = 'fffiiiii'
+    format = 'fffffiii'
     size = struct.calcsize(format)
 
     def pack(self):
